@@ -71,11 +71,35 @@ class RemoteFeedLoaderTest: XCTestCase {
         let (sut, client) = makeSUT()
 
         expect(sut, toCompleteWith: .success([])) {
-            let emptyListJson = Data("{\"item\": []}".utf8)
+            let emptyListJson = Data("{\"items\": []}".utf8)
             client.complete(withStatusCode: 200, data: emptyListJson)
         }
     }
     
+    func test_deliversItemsOn200HTTPResponseWithJSONItems() {
+        let (sut, client) = makeSUT()
+        
+        let item1 = makeItem(
+            id: UUID(),
+            imageURL: URL(string: "https://a-url.com")!
+        )
+        
+        let item2 = makeItem(
+            id: UUID(),
+            description: "a description",
+            location: "a location",
+            imageURL: URL(string: "https://b-url.com")!
+        )
+        
+        let itemsJSON: [String: Any] = ["items": [item1.json, item2.json]]
+        let items = [item1.model, item2.model]
+        
+        expect(sut, toCompleteWith: .success(items)) {
+            let json = try! JSONSerialization.data(withJSONObject: itemsJSON)
+            client.complete(withStatusCode: 200, data: json)
+        }
+    }
+     
     //MARK: - Helper
     
     private func makeSUT(url: URL = URL(string: "https://example.com")!) -> (sut: RemoteFeedLoader, client: HTTPClientSpy) {
@@ -83,7 +107,25 @@ class RemoteFeedLoaderTest: XCTestCase {
         let sut = RemoteFeedLoader(url: url, client: client)
         return (sut, client)
     }
-     
+    
+    private func makeItem(
+        id: UUID,
+        description: String? = nil,
+        location: String? = nil,
+        imageURL: URL
+    ) -> (model: FeedItem, json: [String: Any]) {
+        let model = FeedItem(id: id, description: description, location: location, imageURL: imageURL)
+        
+        let json: [String: Any] = [
+            "id": id.uuidString,
+            "description": description,
+            "location": location,
+            "image": imageURL.absoluteString
+        ].compactMapValues{$0}
+        
+        return (model, json)
+    }
+    
     private func expect(
         _ sut: RemoteFeedLoader,
         toCompleteWith result: RemoteFeedLoader.Result,
