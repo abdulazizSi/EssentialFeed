@@ -8,7 +8,6 @@
 import Foundation
 
 public final class RemoteFeedLoader {
-    public typealias Result = Swift.Result<[FeedItem], Error>
     
     private let url: URL
     private let client: HTTPClient
@@ -17,6 +16,8 @@ public final class RemoteFeedLoader {
         case connectivity
         case invalidData
     }
+    
+    public typealias Result = LoadFeedResult<Error>
     
     public init(url: URL, client: HTTPClient) {
         self.client = client
