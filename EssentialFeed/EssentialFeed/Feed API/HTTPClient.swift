@@ -7,16 +7,16 @@
 
 import Foundation
 
-public typealias HTTPClientResponse = Result<(Data, HTTPURLResponse), Error>
+public typealias HTTPClientResult = Result<(Data, HTTPURLResponse), Error>
 
 public protocol HTTPClient {
-    func get(from url: URL, completion: @escaping (HTTPClientResponse) -> Void)
+    func get(from url: URL, completion: @escaping (HTTPClientResult) -> Void)
 }
 
 //extension URLSession: HTTPClient {
-//    public func get(from url: URL, completion: @escaping (HTTPClientResponse) -> Void) {
+//    public func get(from url: URL, completion: @escaping (HTTPClientResult) -> Void) {
 //        dataTask(with: url) { data, response, error in
-//            let completionBlock: HTTPClientResponse
+//            let completionBlock: HTTPClientResult
 //                                       
 //            guard error == nil else  {
 //                completionBlock = .failure(error!)
