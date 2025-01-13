@@ -25,55 +25,59 @@ class URLSessionHTTPClient {
 }
 
 class URLSessionHTTPClientTests: XCTestCase {
-
+    
+    override class func setUp() {
+        super.setUp()
+        URLProtocolStub.startInterceptingRequests()
+    }
+    
+    override class func tearDown() {
+        super.tearDown()
+        URLProtocolStub.stopInterceptingRequests()
+    }
+    
     func test_getFromURL_performsGetRequestWithURL() {
-        URLProtocolStub.performInterceptedRequest {
-            let url = URL(string: "https://example.com")!
-            let exp = expectation(description: "Wait for request")
-            
-            URLProtocolStub.observeRequest { request in
-                XCTAssertEqual(request.url, url)
-                XCTAssertEqual(request.httpMethod, "GET")
-                exp.fulfill()
-            }
-            
-            URLSessionHTTPClient().get(from: url) { _ in }
-            
-            wait(for: [exp], timeout: 1.0)
+        let url = URL(string: "https://example.com")!
+        let exp = expectation(description: "Wait for request")
+        
+        URLProtocolStub.observeRequest { request in
+            XCTAssertEqual(request.url, url)
+            XCTAssertEqual(request.httpMethod, "GET")
+            exp.fulfill()
         }
+        
+        makeSUT().get(from: url) { _ in }
+        
+        wait(for: [exp], timeout: 1.0)
     }
     
     func test_getFromURL_failsOnRequestError() {
-//        URLProtocolStub.startInterceptingRequests()
-        
-        URLProtocolStub.performInterceptedRequest {
-            let url = URL(string: "https://example.com")!
-            let error = NSError(domain: "any error", code: 1)
-            URLProtocolStub.stub(data: nil, response: nil, error: error)
-            
-            let sut = URLSessionHTTPClient()
-            
-            let exp = expectation(description: "Wait for completion")
-            
-            sut.get(from: url) { result in
-                switch result {
-                case let .failure(receivedError as NSError):
-                    XCTAssertEqual(receivedError.domain, error.domain)
-                    XCTAssertEqual(receivedError.code, error.code)
-                default:
-                    XCTFail("Expected failure with \(error), got \(result) instead")
-                }
+        let url = URL(string: "https://example.com")!
+        let error = NSError(domain: "any error", code: 1)
+        URLProtocolStub.stub(data: nil, response: nil, error: error)
                 
-                exp.fulfill()
+        let exp = expectation(description: "Wait for completion")
+        
+        makeSUT().get(from: url) { result in
+            switch result {
+            case let .failure(receivedError as NSError):
+                XCTAssertEqual(receivedError.domain, error.domain)
+                XCTAssertEqual(receivedError.code, error.code)
+            default:
+                XCTFail("Expected failure with \(error), got \(result) instead")
             }
             
-            wait(for: [exp], timeout: 1.0)
+            exp.fulfill()
         }
         
-//        URLProtocolStub.stopInterceptingRequests()
+        wait(for: [exp], timeout: 1.0)
     }
     
     //MARK: - Helper
+    
+    private func makeSUT() -> URLSessionHTTPClient {
+        URLSessionHTTPClient()
+    }
     
     private class URLProtocolStub: URLProtocol {
         private static var stub: Stub?
@@ -94,19 +98,13 @@ class URLSessionHTTPClientTests: XCTestCase {
             requestObserver = request
         }
         
-        static func performInterceptedRequest(_ request: () -> Void ) {
-            startInterceptingRequests()
-            request()
-            stopInterceptingRequests()
-        }
-        
         static func startInterceptingRequests() {
             URLProtocol.registerClass(URLProtocolStub.self)
         }
         
         static func stopInterceptingRequests() {
             URLProtocol.unregisterClass(URLProtocolStub.self)
-            URLProtocolStub.stub = nil
+            stub = nil
             requestObserver = nil
         }
         
