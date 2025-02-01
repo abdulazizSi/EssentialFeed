@@ -21,6 +21,7 @@
 		8965FAC92D37FE2C008B9E37 /* XCTestCase + MemoryLeakTrackingHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8965FAB72D34E833008B9E37 /* XCTestCase + MemoryLeakTrackingHelper.swift */; };
 		8965FAD92D4E3A5E008B9E37 /* CacheFeedUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8965FAD82D4E3A5E008B9E37 /* CacheFeedUseCaseTests.swift */; };
 		8965FADC2D4E6BD4008B9E37 /* LocalFeedLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8965FADB2D4E6BD4008B9E37 /* LocalFeedLoader.swift */; };
+		8965FADE2D4E6C3A008B9E37 /* FeedStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8965FADD2D4E6C3A008B9E37 /* FeedStore.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,6 +59,7 @@
 		8965FACA2D38042E008B9E37 /* CI.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CI.xctestplan; sourceTree = "<group>"; };
 		8965FAD82D4E3A5E008B9E37 /* CacheFeedUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheFeedUseCaseTests.swift; sourceTree = "<group>"; };
 		8965FADB2D4E6BD4008B9E37 /* LocalFeedLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalFeedLoader.swift; sourceTree = "<group>"; };
+		8965FADD2D4E6C3A008B9E37 /* FeedStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedStore.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -183,6 +185,7 @@
 			isa = PBXGroup;
 			children = (
 				8965FADB2D4E6BD4008B9E37 /* LocalFeedLoader.swift */,
+				8965FADD2D4E6C3A008B9E37 /* FeedStore.swift */,
 			);
 			path = "Feed Cache";
 			sourceTree = "<group>";
@@ -335,6 +338,7 @@
 				8965FAA22D2C19A2008B9E37 /* FeedItemsMapper.swift in Sources */,
 				080EDF0E21B6DCB600813479 /* FeedLoader.swift in Sources */,
 				8965FA9E2D298E58008B9E37 /* RemoteFeedLoader.swift in Sources */,
+				8965FADE2D4E6C3A008B9E37 /* FeedStore.swift in Sources */,
 				8965FADC2D4E6BD4008B9E37 /* LocalFeedLoader.swift in Sources */,
 				8965FAA02D2C193A008B9E37 /* HTTPClient.swift in Sources */,
 				080EDF0C21B6DAE800813479 /* FeedItem.swift in Sources */,
